@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: Restore
+        run: dotnet restore GAMABANTU.slnx
+      - name: Build
+        run: dotnet build GAMABANTU.slnx --configuration Release --no-restore
+      - name: Publish API
+        run: dotnet publish src/GAMABANTU.Api --configuration Release --no-build
+      - name: Publish client
+        run: dotnet publish src/GAMABANTU.Client --configuration Release --no-build
